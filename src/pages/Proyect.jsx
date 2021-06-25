@@ -27,6 +27,13 @@ const Proyect = () => {
     useEffect((e) => {
         async function aux() {
             const data = await getProyect({ codigo_proyecto: codigoProyecto })
+
+            setSeguimiento({
+                ...seguimiento,
+                PROYECTO_codigo_proyecto: data[0].codigo_proyecto,
+                estadoProyecto: data[0].codigo_estado
+            })
+
             setProyecto(data[0])
             setCargandoInformacion(false)
         }
@@ -49,11 +56,6 @@ const Proyect = () => {
         }
         aux()
 
-        setSeguimiento({
-            ...seguimiento,
-            PROYECTO_codigo_proyecto: codigoProyecto,
-            estadoProyecto: proyecto.codigo_estado
-        })
     }, [])
 
     //Función que se ejecuta cada que el usuario escribe en un input
@@ -63,14 +65,14 @@ const Proyect = () => {
             [e.target.name]: e.target.value
         })
 
-        console.log(seguimiento)
     }
 
     // Enviar seguimiento nuevo al servidor
     const handleSubmit = () => {
         setAvanceUltimoSEguimiento(seguimiento.avance)
+        console.log("1", seguimiento)
         PostSeguimiento({ seguimiento: seguimiento })
-        console.log(seguimiento)
+        console.log("2", seguimiento)
         alert("seguimiento guardado")
         window.location.reload()
     }
@@ -122,7 +124,7 @@ const Proyect = () => {
                             return (
                                 <>
                                     <div key={e.codigo_seguimiento} className="card text-center mt-3">
-                                        <div className="card-header">Seguimiento número {e.codigo_seguimiento} </div>
+                                        <div className="card-header">Codigo seguimiento {e.codigo_seguimiento} </div>
                                         <div className="card-body">
                                             <h5 className="card-title">Avance: {e.avance}%</h5>
                                             <p className="card-text">{e.descripccion}</p>
