@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import Map from "../componenets/Map.jsx"
 import getProyect from "../services/getProyect.js"
 import GetSeguimientos from "../services/getSeguimientos.js"
+import PostSeguimiento from "../services/postSeguimiento.js"
 
 const Proyect = () => {
 
@@ -9,7 +10,7 @@ const Proyect = () => {
     const [proyecto, setProyecto] = useState({})
     const [seguimientos, setSeguimientos] = useState([])
     const [seguimiento, setSeguimiento] = useState({
-        fecha: new Date().getFullYear(),
+        fecha: new Date().toJSON().split("T")[0],
         descripccion: "",
         avance: "",
         PROYECTO_codigo_proyecto: null,
@@ -21,10 +22,6 @@ const Proyect = () => {
     const params = window.location.search
     const urlParams = new URLSearchParams(params)
     const codigoProyecto = urlParams.get("codigo_proyecto")
-    setSeguimiento({
-        ...seguimiento,
-        PROYECTO_codigo_proyecto: codigoProyecto
-    })
 
     useEffect((e) => {
         async function aux() {
@@ -41,6 +38,11 @@ const Proyect = () => {
             setSeguimientos(data)
         }
         aux()
+
+        setSeguimiento({
+            ...seguimiento,
+            PROYECTO_codigo_proyecto: codigoProyecto
+        })
     }, [])
 
     //Función que se ejecuta cada que el usuario escribe en un input
@@ -49,6 +51,15 @@ const Proyect = () => {
             ...seguimiento,
             [e.target.name]: e.target.value
         })
+
+        console.log(seguimiento)
+    }
+
+    // Enviar seguimiento nuevo al servidor
+    const handleSubmit = () => {
+        PostSeguimiento({ seguimiento: seguimiento })
+        console.log(seguimiento)
+        alert("seguimiento guardado")
     }
 
 
@@ -96,9 +107,9 @@ const Proyect = () => {
                             return (
                                 <>
                                     <div key={e.codigo_seguimiento} className="card text-center mt-3">
-                                        <div className="card-header">Avance: {e.avance}%</div>
+                                        <div className="card-header">Seguimiento número {e.codigo_seguimiento} </div>
                                         <div className="card-body">
-                                            <h5 className="card-title">Seguimiento número {e.codigo_seguimiento}</h5>
+                                            <h5 className="card-title">Avance: {e.avance}%</h5>
                                             <p className="card-text">{e.descripccion}</p>
                                             <a href="#" className="btn btn-primary">Mostrar fotos</a>
                                         </div>
@@ -114,7 +125,7 @@ const Proyect = () => {
             {/* Modal agregar seguimiento */}
 
             {/* Modal */}
-            <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -129,22 +140,28 @@ const Proyect = () => {
                             }}>
                                 <div className="mb-3">
                                     <label className="form-label">Descipcción</label>
-                                    <input type="text" className="form-control" id="descripccion" name="descripccion" />
+                                    <input onChange={(e) => {
+                                        handleChange(e)
+                                    }} type="text" className="form-control" id="descripccion" name="descripccion" />
                                     <div className="form-text">El porque sel seguimiento</div>
                                 </div>
                                 <div className="mb-3">
                                     <label className="form-label">Avance</label>
-                                    <input type="number" className="form-control" id="avance" name="avance" min={1} max={100} />
+                                    <input onChange={(e) => {
+                                        handleChange(e)
+                                    }} type="number" className="form-control" id="avance" name="avance" min={1} max={100} />
                                     <div className="form-text">Actualmente en 10%, ingresar valor de 10 a 100</div>
                                 </div>
                                 <div className="input-group mb-3">
-                                    <select className="form-select" id="estadoProyecto" name="estadoProyecto">
-                                        <option selected>Choose...</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                    <select onChange={(e) => {
+                                        handleChange(e)
+                                    }} className="form-select" id="estadoProyecto" name="estadoProyecto">
+                                        <option value={1}>inicial</option>
+                                        <option value={2}>ejecución</option>
+                                        <option value={3}>entrega</option>
+                                        <option value={4}>estabilizacion</option>
                                     </select>
-                                    <label className="input-group-text" for="inputGroupSelect02">Nuevo estado</label>
+                                    <label className="input-group-text">Nuevo estado</label>
                                 </div>
                             </form>
 
@@ -152,7 +169,7 @@ const Proyect = () => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="button" className="btn btn-primary">Guardar seguimiento</button>
+                            <button onClick={handleSubmit} type="button" className="btn btn-primary">Guardar seguimiento</button>
                         </div>
                     </div>
                 </div>
