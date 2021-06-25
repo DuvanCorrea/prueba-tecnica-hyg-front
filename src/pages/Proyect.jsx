@@ -41,7 +41,8 @@ const Proyect = () => {
 
         setSeguimiento({
             ...seguimiento,
-            PROYECTO_codigo_proyecto: codigoProyecto
+            PROYECTO_codigo_proyecto: codigoProyecto,
+            estadoProyecto: proyecto.codigo_estado
         })
     }, [])
 

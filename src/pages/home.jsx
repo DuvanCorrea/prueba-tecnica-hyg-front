@@ -22,10 +22,16 @@ const Home = () => {
     const handleSubmit = () => {
         const aux = async () => {
             const dataNueva = await PostBuscarProyecto({ dataBuscar: data })
-            console.log(dataNueva)
+            console.log("data nueva", dataNueva)
             setProyects(dataNueva)
         }
         aux()
+        setData({
+            ...data,
+            codigo_proyecto: null,
+            codigo_lider: null,
+            fecha_inicio: null
+        })
     }
 
 
@@ -49,7 +55,7 @@ const Home = () => {
                 {metodo == "codigo_proyecto" ? <><label className="form-label">Código del proyecto</label>
                     <input onChange={(e) => {
                         handleChange(e)
-                    }} type="number" className="form-control" id="codigo_proyecto" name="codigo_proyecto" />
+                    }} value={null} type="number" className="form-control" id="codigo_proyecto" name="codigo_proyecto" />
                     {/* <div className="form-text">Codigo a buscar</div> */}</> : ""}
 
                 {metodo == "codigo_lider" ? <><label className="form-label">Código del lider</label>
@@ -76,8 +82,8 @@ const Home = () => {
 
                 {proyects.map(e => {
                     return (
-                        <>
-                            <div className="col-sm-4 mt-3 mb-3">
+                        <div className="col-sm-4 mt-3 mb-3" key={e.codigo_proyecto} >
+                            <div >
                                 <div className="card">
                                     <div className="card-body">
                                         <h5 className="card-title">Código del proyecto: {e.codigo_proyecto}</h5>
@@ -85,12 +91,12 @@ const Home = () => {
                                         <p className="card-text"><strong>Entidad: </strong>{e.nombre_entidad}</p>
                                         <p className="card-text"><strong>Dirección: </strong>{e.direccion}</p>
                                         <p className="card-text"><strong>Estado: </strong>{e.nombre_estado}</p>
-                                        <p className="card-text"><strong>Cantidad de seguimientos: </strong></p>
+                                        <p className="card-text"><strong>Cantidad de seguimientos: </strong>{e.count}</p>
                                         <a href={`/proyectos?codigo_proyecto=${e.codigo_proyecto}`} className="btn btn-secondary" target="blank">Ver proyecto</a>
                                     </div>
                                 </div>
                             </div>
-                        </>
+                        </div>
                     )
                 })}
 
