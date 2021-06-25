@@ -93,9 +93,11 @@ const Proyect = () => {
                 {/* Mapa */}
                 <div className="col-6">
                     <Map googleMapURL={"https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyDro6JzfZ9jhSz2wQSqB4lLbIzCb6voDP8"}
-                        containerElement={<div style={{ height: "400px" }}></div>}
+                        containerElement={<div style={{ height: "600px" }}></div>}
                         mapElement={<div style={{ height: "100%" }}></div>}
                         loadingElement={<p>Cargando</p>}
+                        latitud={proyecto.latitud}
+                        longitud={proyecto.longitud}
                     />
                 </div>
             </div>
