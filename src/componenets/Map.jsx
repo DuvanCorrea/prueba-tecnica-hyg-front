@@ -1,11 +1,13 @@
-import { GoogleMap, withScriptjs, withGoogleMap } from "react-google-maps"
+import { GoogleMap, withScriptjs, withGoogleMap, Marker } from "react-google-maps"
 
-const Map = (props) => {
+const Map = (props, { lat, log }) => {
     return (
         <>
             <div className="card">
                 <GoogleMap defaultZoom={15}
-                    defaultCenter={{ lat: 6.15124, lng: -75.636667}} />
+                    defaultCenter={{ lat: 6.15124, lng: -75.636667 }}>
+                    <Marker position={{ lat: 6.15124, lng: -75.636667 }} />
+                </GoogleMap>
             </div>
         </>
     )
