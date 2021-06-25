@@ -7,12 +7,13 @@ import PostSeguimiento from "../services/postSeguimiento.js"
 const Proyect = () => {
 
     const [cargandoInformacion, setCargandoInformacion] = useState(true)
+    const [avanceUltimoSEguimiento, setAvanceUltimoSEguimiento] = useState(0)
     const [proyecto, setProyecto] = useState({})
     const [seguimientos, setSeguimientos] = useState([])
     const [seguimiento, setSeguimiento] = useState({
         fecha: new Date().toJSON().split("T")[0],
         descripccion: "",
-        avance: "",
+        avance: 0,
         PROYECTO_codigo_proyecto: null,
         estadoProyecto: null,
     })
@@ -33,8 +34,17 @@ const Proyect = () => {
     }, [])
 
     useEffect((e) => {
+
         async function aux() {
             const data = await GetSeguimientos({ codigo_proyecto: codigoProyecto })
+
+            // ultimo seguimiento
+            // ------------------
+
+            if (data.length > 0) {
+                setAvanceUltimoSEguimiento(data[0].avance)
+            }
+
             setSeguimientos(data)
         }
         aux()
@@ -58,9 +68,11 @@ const Proyect = () => {
 
     // Enviar seguimiento nuevo al servidor
     const handleSubmit = () => {
+        setAvanceUltimoSEguimiento(seguimiento.avance)
         PostSeguimiento({ seguimiento: seguimiento })
         console.log(seguimiento)
         alert("seguimiento guardado")
+        window.location.reload()
     }
 
 
@@ -73,9 +85,9 @@ const Proyect = () => {
             <div className="row">
                 <div className="col-6">
                     <div className="card">
-                        <img src={"https://economipedia.com/wp-content/uploads/Inicio-de-un-proyecto.jpg"} className="card-img-top" alt="..." />
+                        <img src={"https://www.iebschool.com/blog/wp-content/uploads/2015/07/presentacion-de-tu-proyecto.jpg"} className="card-img-top" alt="..." />
                         <div className="card-body">
-                            <h5 className="card-title"><strong>Estado del proyecto: <>{proyecto.nombre_estado}</></strong></h5>
+                            <h5 className="card-title"><strong>Estado del proyecto: <><p className="badge bg-success">{proyecto.nombre_estado}</p></></strong></h5>
                             <p className="card-text"><strong>Código del proyecto: </strong>{proyecto.codigo_proyecto}</p>
                             <p className="card-text"><strong>Fecha de inicio </strong>{proyecto.fecha_inicio.split("T")[0]}</p>
                             <p className="card-text"><strong>Entidad </strong>{proyecto.nombre_entidad}</p>
@@ -152,8 +164,8 @@ const Proyect = () => {
                                     <label className="form-label">Avance</label>
                                     <input onChange={(e) => {
                                         handleChange(e)
-                                    }} type="number" className="form-control" id="avance" name="avance" min={1} max={100} />
-                                    <div className="form-text">Actualmente en 10%, ingresar valor de 10 a 100</div>
+                                    }} type="number" className="form-control" id="avance" name="avance" min={avanceUltimoSEguimiento} max={100} />
+                                    <div className="form-text">Actualmente en {avanceUltimoSEguimiento}%, ingresar valor de {avanceUltimoSEguimiento} a 100</div>
                                 </div>
                                 <div className="input-group mb-3">
                                     <select onChange={(e) => {

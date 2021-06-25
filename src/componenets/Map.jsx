@@ -6,7 +6,7 @@ const Map = (props) => {
         <>
             <div className="card">
                 <GoogleMap defaultZoom={15}
-                    defaultCenter={{ lat: 6.15124, lng: -75.636667 }}>
+                    defaultCenter={{ lat: props.latitud, lng: props.longitud }}>
                     <Marker position={{ lat: props.latitud, lng: props.longitud }} />
                 </GoogleMap>
             </div>

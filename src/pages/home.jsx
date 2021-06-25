@@ -23,7 +23,11 @@ const Home = () => {
         const aux = async () => {
             const dataNueva = await PostBuscarProyecto({ dataBuscar: data })
             console.log("data nueva", dataNueva)
-            setProyects(dataNueva)
+            if (!data) {
+                setProyects([])
+            } else {
+                setProyects(dataNueva)
+            }
         }
         aux()
         setData({
@@ -90,7 +94,7 @@ const Home = () => {
                                         <p className="card-text"><strong>Fecha inicio: </strong>{e.fecha_inicio.split("T")[0]}</p>
                                         <p className="card-text"><strong>Entidad: </strong>{e.nombre_entidad}</p>
                                         <p className="card-text"><strong>Dirección: </strong>{e.direccion}</p>
-                                        <p className="card-text"><strong>Estado: </strong>{e.nombre_estado}</p>
+                                        <p className="card-text"><strong>Estado: </strong><label className="badge bg-success">{e.nombre_estado}</label></p>
                                         <p className="card-text"><strong>Cantidad de seguimientos: </strong>{e.count}</p>
                                         <a href={`/proyectos?codigo_proyecto=${e.codigo_proyecto}`} className="btn btn-secondary" target="blank">Ver proyecto</a>
                                     </div>
